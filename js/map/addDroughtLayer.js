@@ -14,6 +14,39 @@ export function addDroughtLayer(map, droughtData) {
     '주의': 'rgba(255,80,50,0.7)'
   };
 
+  function createDroughtPopupContent(p) {
+    const step = p.DRGHT_STEP;
+    const stepColor = {
+      '정상': '#66cc66',
+      '관심': '#ffcc33',
+      '주의': '#ff5533'
+    };
+    const stepEN = {
+      '정상': 'Normal',
+      '관심': 'Watch',
+      '주의': 'Caution'
+    };
+
+    const root = document.createElement('div');
+    root.className = 'drought-popup';
+    // root.style.setProperty('--badge', stepColor[step] || '#666');
+
+    const title = document.createElement('div');
+    title.className = 'drought-popup__title';
+    title.textContent = `${p.SGG_NM}, ${p.SD_NM}`;
+    root.appendChild(title);
+
+    const badge = document.createElement('div');
+    badge.className = 'drought-popup__badge';
+    badge.style.setProperty('--badge', stepColor[step] || '#666');
+    if (step === '관심') badge.classList.add('drought-popup__badge--dark');
+    badge.textContent = `${step} (${stepEN[step] || ''})`;
+    root.appendChild(badge);
+
+
+    return root;
+  }
+
   return L.geoJSON(droughtData, {
     style: function (feature) {
       const step = feature.properties.DRGHT_STEP;
@@ -21,28 +54,12 @@ export function addDroughtLayer(map, droughtData) {
         fillColor: droughtColors[step] || 'transparent',
         fillOpacity: 1,
         color: droughtBorders[step] || 'rgba(255,255,255,0.05)',
-        weight: step === '정상' ? 0.3 : 0.7,
+        weight: step === '정상' ? 0.6 : 0.7,
         opacity: 1
       };
     },
     onEachFeature: function (feature, layer) {
-      const p = feature.properties;
-      const stepColor = {
-        '정상': '#66cc66',
-        '관심': '#ffcc33',
-        '주의': '#ff5533'
-      };
-      const stepEN = {
-        '정상': 'Normal',
-        '관심': 'Watch',
-        '주의': 'Caution'
-      };
-      layer.bindPopup(
-        '<div style="font-family:\'Apple SD Gothic Neo\',sans-serif;background:#1a1a1a;color:#eee;min-width:160px">' +
-        '<div style="font-size:13px;font-weight:700">' + p.SGG_NM + ', ' + p.SD_NM + '</div>' +
-        '<div style="margin-top:4px"><span style="display:inline-block;background:' + (stepColor[p.DRGHT_STEP] || '#666') + ';color:' + (p.DRGHT_STEP === '관심' ? '#333' : '#fff') + ';padding:2px 10px;border-radius:10px;font-size:11px">' + p.DRGHT_STEP + ' (' + (stepEN[p.DRGHT_STEP] || '') + ')</span></div>' +
-        '<div style="font-size:10px;color:#888;margin-top:3px">Date: ' + p.ANALS_DE + '</div></div>'
-      );
+      layer.bindPopup(createDroughtPopupContent(feature.properties));
     }
   }).addTo(map);
 }
