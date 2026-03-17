@@ -8,7 +8,7 @@ export function createLegendControl({
 }) {
   const legend = L.control({ position: 'bottomleft' });
 
-  legend.onAdd = function() {
+  legend.onAdd = function () {
     const div = L.DomUtil.create('div', 'legend');
     L.DomEvent.disableClickPropagation(div);
     L.DomEvent.disableScrollPropagation(div);
@@ -20,8 +20,10 @@ export function createLegendControl({
     for (const [group, types] of Object.entries(categoryGroups)) {
       const groupEl = document.createElement('div');
       groupEl.className = 'legend-group';
-      groupEl.textContent = group;
-      div.appendChild(groupEl);
+      groupEl.appendChild(document.createTextNode(group));
+
+      const itemsWrap = document.createElement('div');
+      itemsWrap.className = 'legend-items';
 
       types.forEach(type => {
         const count = data.filter(d => d.type === type).length;
@@ -45,17 +47,20 @@ export function createLegendControl({
 
         row.appendChild(check);
         row.appendChild(text);
-        div.appendChild(row);
+        itemsWrap.appendChild(row);
       });
+
+      groupEl.appendChild(itemsWrap);
+      div.appendChild(groupEl);
     }
 
     const droughtWrap = document.createElement('div');
     droughtWrap.className = 'drought-legend';
     droughtWrap.innerHTML =
-      '<h4>Drought status (2026.03.15)</h4>' +
-      '<div><i style="background:rgba(255,80,50,0.6)"></i><span>Caution</span></div>' +
-      '<div><i style="background:rgba(255,200,50,0.5)"></i><span>Watch</span></div>' +
-      '<div><i style="background:rgba(100,200,100,0.15)"></i><span>Normal</span></div>';
+      '<h4>Drought status</h4>' +
+      '<div class="drought-item"><i style="background:rgba(255,80,50,0.6)"></i><span>Caution</span></div>' +
+      '<div class="drought-item"><i style="background:rgba(255,200,50,0.5)"></i><span>Watch</span></div>' +
+      '<div class="drought-item"><i style="background:rgba(100,200,100,0.15)"></i><span>Normal</span></div>';
     div.appendChild(droughtWrap);
 
     return div;

@@ -4,6 +4,12 @@ export function createDcLayers({ map, data, colorMap, sizeMap }) {
   const markers = [];
   const layerGroups = {};
 
+  function applyNeonGlow(marker, glowColor) {
+    const el = marker.getElement?.();
+    if (!el) return;
+    el.style.filter = `drop-shadow(0 0 1px ${glowColor}) drop-shadow(0 0 6px ${glowColor}) drop-shadow(0 0 10px ${glowColor})`;
+  }
+
   Object.keys(colorMap).forEach(type => {
     layerGroups[type] = L.layerGroup().addTo(map);
   });
@@ -11,7 +17,7 @@ export function createDcLayers({ map, data, colorMap, sizeMap }) {
   data.forEach(d => {
     if (!d.lat || !d.lon) return;
     const color = colorMap[d.type] || '#999';
-    const size = sizeMap[d.type] || 6;
+    const size = 6;
 
     const marker = L.circleMarker([d.lat, d.lon], {
       radius: size,
@@ -19,8 +25,11 @@ export function createDcLayers({ map, data, colorMap, sizeMap }) {
       color: 'transparent',
       weight: 0,
       opacity: 1,
-      fillOpacity: 0.85
+      fillOpacity: 0.85,
+      className: 'dc-marker'
     });
+
+    marker.on('add', () => applyNeonGlow(marker, color));
 
     let popup = `<div style="font-family:'Apple SD Gothic Neo',sans-serif;min-width:200px;background:#1a1a1a;color:#eee">`;
     popup += `<div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#fff">${d.name}</div>`;

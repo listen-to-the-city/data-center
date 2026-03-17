@@ -195,7 +195,7 @@ legend.onAdd = function () {
   const droughtWrap = document.createElement('div');
   droughtWrap.className = 'drought-legend';
   droughtWrap.innerHTML =
-    '<h4>Drought status (2026.03.15)</h4>' +
+    '<h4>Drought status</h4>' +
     '<div><i style="background:rgba(255,80,50,0.6)"></i><span>Caution</span></div>' +
     '<div><i style="background:rgba(255,200,50,0.5)"></i><span>Watch</span></div>' +
     '<div><i style="background:rgba(100,200,100,0.15)"></i><span>Normal</span></div>';

@@ -1,13 +1,13 @@
 export const colorMap = {
-  'Hyperscale': '#a2fc4d',
-  'Commercial colo': '#e84dc4',
-  'AI / Cloud': '#8e3ce1',
-  'Telecom IDC': '#ff6b35',
-  'Pipeline': '#ffc233',
-  'Enterprise': '#45b7d1',
-  'Gov integrated': '#2563eb',
-  'Gov agency': '#3b82f6',
-  'Municipal': '#64748b'
+  'Hyperscale': '#a3fc4d',
+  'Commercial colo': '#c7fe94',
+  'AI / Cloud': '#e3feca',
+  'Telecom IDC': '#e84ec4',
+  'Pipeline': '#f195dc',
+  'Enterprise': '#8e3ce1',
+  'Gov integrated': '#bc8aed',
+  'Gov agency': '#ddc5f7',
+  'Municipal': '#f4edfc'
 };
 
 export const sizeMap = {
