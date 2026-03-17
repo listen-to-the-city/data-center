@@ -15,17 +15,17 @@ export function addDroughtLayer(map, droughtData) {
   };
 
   return L.geoJSON(droughtData, {
-    style: function(feature) {
+    style: function (feature) {
       const step = feature.properties.DRGHT_STEP;
       return {
         fillColor: droughtColors[step] || 'transparent',
         fillOpacity: 1,
         color: droughtBorders[step] || 'rgba(255,255,255,0.05)',
-        weight: step === '정상' ? 0.3 : 1.5,
+        weight: step === '정상' ? 0.3 : 0.7,
         opacity: 1
       };
     },
-    onEachFeature: function(feature, layer) {
+    onEachFeature: function (feature, layer) {
       const p = feature.properties;
       const stepColor = {
         '정상': '#66cc66',
