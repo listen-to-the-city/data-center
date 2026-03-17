@@ -25,7 +25,16 @@ body {
   max-width: 320px;
   border: 1px solid rgba(255, 255, 255, .08);
   color: #ccc;
+  overflow-y: auto;
+  max-height: calc(100dvh - 20px);
 }
+
+@media (max-width: 768px) {
+  .legend {
+    max-height: calc(100dvh - 80px);
+  }
+}
+
 
 .legend h4 {
   margin: 0 0 10px;
@@ -106,22 +115,19 @@ body {
 }
 
 .dc-marker--glow {
-  filter: drop-shadow(0 0 1px var(--dc-glow)) drop-shadow(0 0 4px var(--dc-glow)) drop-shadow(0 0 8px var(--dc-glow));
-  animation: dcGlowBreath 2.2s ease-in-out;
-  animation-iteration-count: 2;
+  will-change: filter, opacity;
+  animation: dcGlowBreath 2.8s ease-in-out infinite;
 }
 
 @keyframes dcGlowBreath {
 
   0%,
   100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 1px var(--dc-glow)) drop-shadow(0 0 4px var(--dc-glow)) drop-shadow(0 0 8px var(--dc-glow));
+    opacity: .72;
   }
 
   50% {
     opacity: 1;
-    filter: drop-shadow(0 0 2px var(--dc-glow)) drop-shadow(0 0 10px var(--dc-glow)) drop-shadow(0 0 18px var(--dc-glow));
   }
 }
 
