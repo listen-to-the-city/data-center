@@ -25,16 +25,7 @@ body {
   max-width: 320px;
   border: 1px solid rgba(255, 255, 255, .08);
   color: #ccc;
-  overflow-y: auto;
-  max-height: calc(100dvh - 20px);
 }
-
-@media (max-width: 768px) {
-  .legend {
-    max-height: calc(100dvh - 80px);
-  }
-}
-
 
 .legend h4 {
   margin: 0 0 10px;
@@ -115,19 +106,22 @@ body {
 }
 
 .dc-marker--glow {
-  will-change: filter, opacity;
-  animation: dcGlowBreath 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 1px var(--dc-glow)) drop-shadow(0 0 4px var(--dc-glow)) drop-shadow(0 0 8px var(--dc-glow));
+  animation: dcGlowBreath 2.2s ease-in-out;
+  animation-iteration-count: 2;
 }
 
 @keyframes dcGlowBreath {
 
   0%,
   100% {
-    opacity: .72;
+    opacity: 1;
+    filter: drop-shadow(0 0 1px var(--dc-glow)) drop-shadow(0 0 4px var(--dc-glow)) drop-shadow(0 0 8px var(--dc-glow));
   }
 
   50% {
     opacity: 1;
+    filter: drop-shadow(0 0 2px var(--dc-glow)) drop-shadow(0 0 10px var(--dc-glow)) drop-shadow(0 0 18px var(--dc-glow));
   }
 }
 
@@ -162,7 +156,6 @@ body {
   /* border: 1px solid rgba(255, 255, 255, .08) */
 }
 
-
 .info-panel h3 {
   font-size: 55px;
   margin: 0 0 0px;
@@ -174,17 +167,6 @@ body {
   color: #999;
   font-size: 14px
 }
-
-@media (max-width: 768px) {
-  .info-panel {
-    padding-top: 14px;
-  }
-
-  .info-panel h3 {
-    font-size: 20px;
-  }
-}
-
 
 .stat-bar {
   display: flex;

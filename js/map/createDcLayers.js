@@ -7,10 +7,7 @@ export function createDcLayers({ map, data, colorMap, sizeMap }) {
   function applyNeonGlow(marker, glowColor) {
     const el = marker.getElement?.();
     if (!el) return;
-    // Safari: drop-shadow + CSS var can be unreliable on SVG elements.
-    // Force compositing and set the filter as a concrete value.
-    el.style.willChange = 'filter, opacity';
-    el.style.filter = `drop-shadow(0 0 1px ${glowColor}) drop-shadow(0 0 4px ${glowColor}) drop-shadow(0 0 8px ${glowColor})`;
+    el.style.setProperty('--dc-glow', glowColor);
     el.classList.add('dc-marker--glow');
   }
 
