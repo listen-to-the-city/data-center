@@ -74,7 +74,7 @@ const droughtBorders = {
 
 if (droughtData) {
   L.geoJSON(droughtData, {
-    style: function(feature) {
+    style: function (feature) {
       const step = feature.properties.DRGHT_STEP;
       return {
         fillColor: droughtColors[step] || 'transparent',
@@ -84,7 +84,7 @@ if (droughtData) {
         opacity: 1
       };
     },
-    onEachFeature: function(feature, layer) {
+    onEachFeature: function (feature, layer) {
       const p = feature.properties;
       const stepColor = {
         '정상': '#66cc66',
@@ -151,7 +151,7 @@ data.forEach(d => {
 
 // Legend
 const legend = L.control({ position: 'bottomleft' });
-legend.onAdd = function() {
+legend.onAdd = function () {
   const div = L.DomUtil.create('div', 'legend');
   L.DomEvent.disableClickPropagation(div);
   L.DomEvent.disableScrollPropagation(div);
