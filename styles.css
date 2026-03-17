@@ -105,6 +105,31 @@ body {
   box-shadow: none;
 }
 
+.dc-marker--glow {
+  filter: drop-shadow(0 0 1px var(--dc-glow)) drop-shadow(0 0 4px var(--dc-glow)) drop-shadow(0 0 8px var(--dc-glow));
+  animation: dcGlowBreath 2s ease-in-out;
+}
+
+@keyframes dcGlowBreath {
+
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 1px var(--dc-glow)) drop-shadow(0 0 4px var(--dc-glow)) drop-shadow(0 0 8px var(--dc-glow));
+  }
+
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 2px var(--dc-glow)) drop-shadow(0 0 10px var(--dc-glow)) drop-shadow(0 0 18px var(--dc-glow));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-marker--glow {
+    animation: none;
+  }
+}
+
 .legend-check:focus-visible {
   outline: 2px solid rgba(255, 255, 255, .35);
   outline-offset: 2px

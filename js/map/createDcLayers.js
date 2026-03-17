@@ -7,7 +7,8 @@ export function createDcLayers({ map, data, colorMap, sizeMap }) {
   function applyNeonGlow(marker, glowColor) {
     const el = marker.getElement?.();
     if (!el) return;
-    el.style.filter = `drop-shadow(0 0 1px ${glowColor}) drop-shadow(0 0 6px ${glowColor}) drop-shadow(0 0 10px ${glowColor})`;
+    el.style.setProperty('--dc-glow', glowColor);
+    el.classList.add('dc-marker--glow');
   }
 
   Object.keys(colorMap).forEach(type => {
