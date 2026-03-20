@@ -13,9 +13,68 @@ export function createLegendControl({
     L.DomEvent.disableClickPropagation(div);
     L.DomEvent.disableScrollPropagation(div);
 
-    const title = document.createElement('h4');
-    title.textContent = 'Data center type';
-    div.appendChild(title);
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    function createSection({ headerText, bodyEl, defaultExpanded }) {
+      const section = document.createElement('div');
+      section.className = 'legend-section';
+
+      const header = document.createElement('div');
+      header.className = 'legend-section__header';
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+
+      const headerTextEl = document.createElement('span');
+      headerTextEl.className = 'legend-section__headerText';
+      headerTextEl.textContent = headerText;
+
+      const caret = document.createElement('span');
+      caret.className = 'legend-section__caret';
+      caret.setAttribute('aria-hidden', 'true');
+
+      header.appendChild(headerTextEl);
+      header.appendChild(caret);
+
+      const body = bodyEl;
+      body.classList.add('legend-section__body');
+      body.hidden = !defaultExpanded;
+
+      if (defaultExpanded) section.classList.remove('legend-section--collapsed');
+      else section.classList.add('legend-section--collapsed');
+
+      function toggle() {
+        const nextCollapsed = !section.classList.contains('legend-section--collapsed');
+        if (nextCollapsed) {
+          section.classList.add('legend-section--collapsed');
+          body.hidden = true;
+          header.setAttribute('aria-expanded', 'false');
+        } else {
+          section.classList.remove('legend-section--collapsed');
+          body.hidden = false;
+          header.setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      if (isMobile) {
+        header.addEventListener('click', toggle);
+        header.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
+        });
+        header.setAttribute('aria-expanded', defaultExpanded ? 'true' : 'false');
+      } else {
+        header.setAttribute('aria-expanded', 'true');
+      }
+
+      section.appendChild(header);
+      section.appendChild(body);
+      return section;
+    }
+
+    const dcBody = document.createElement('div');
+    dcBody.className = 'legend-section__content';
 
     for (const [group, types] of Object.entries(categoryGroups)) {
       const groupEl = document.createElement('div');
@@ -51,17 +110,30 @@ export function createLegendControl({
       });
 
       groupEl.appendChild(itemsWrap);
-      div.appendChild(groupEl);
+      dcBody.appendChild(groupEl);
     }
 
-    const droughtWrap = document.createElement('div');
-    droughtWrap.className = 'drought-legend';
-    droughtWrap.innerHTML =
-      '<h4>Drought status</h4>' +
+    const dcSection = createSection({
+      headerText: 'Data center type',
+      bodyEl: dcBody,
+      defaultExpanded: true
+    });
+
+    const droughtBody = document.createElement('div');
+    droughtBody.className = 'drought-legend';
+    droughtBody.innerHTML =
       '<div class="drought-item"><i style="background:rgba(255,80,50,0.6)"></i><span>Caution</span></div>' +
       '<div class="drought-item"><i style="background:rgba(255,200,50,0.5)"></i><span>Watch</span></div>' +
       '<div class="drought-item"><i style="background:rgba(100,200,100,0.15)"></i><span>Normal</span></div>';
-    div.appendChild(droughtWrap);
+
+    const droughtSection = createSection({
+      headerText: 'Drought status',
+      bodyEl: droughtBody,
+      defaultExpanded: true
+    });
+
+    div.appendChild(dcSection);
+    div.appendChild(droughtSection);
 
     return div;
   };
