@@ -11,7 +11,7 @@ body {
 
 #map {
   width: 100%;
-  height: 100vh
+  height: 100dvh;
 }
 
 .legend {
@@ -27,6 +27,17 @@ body {
   color: #ccc;
 }
 
+@media (max-width: 768px) {
+  .legend {
+    max-height: calc(100dvh - 80px);
+    margin-bottom: 10px;
+    overflow-y: auto;
+    padding-top: 4px;
+    padding-bottom: 14px;
+    box-shadow: 0 2px 10px rgba(104, 104, 104, 0.5);
+  }
+}
+
 .legend h4 {
   margin: 0 0 10px;
   padding-left: 8px;
@@ -35,6 +46,8 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, .1);
   padding-bottom: 6px
 }
+
+
 
 .legend-group {
   margin: 7px 0 30px 13px;
@@ -156,11 +169,20 @@ body {
   /* border: 1px solid rgba(255, 255, 255, .08) */
 }
 
-
 .info-panel h3 {
   font-size: 55px;
   margin: 0 0 0px;
   color: #eee
+}
+
+@media (max-width: 768px) {
+  .info-panel {
+    padding-top: 10px;
+  }
+
+  .info-panel h3 {
+    font-size: 24px;
+  }
 }
 
 .info-panel p {
@@ -168,17 +190,6 @@ body {
   color: #999;
   font-size: 14px
 }
-
-@media (max-width: 768px) {
-  .info-panel {
-    padding-top: 14px;
-  }
-
-  .info-panel h3 {
-    font-size: 20px;
-  }
-}
-
 
 .stat-bar {
   display: flex;
@@ -359,9 +370,7 @@ body {
 }
 
 .drought-legend {
-  margin-top: 50px;
   padding-top: 4px;
-  border-top: 1px solid rgba(255, 255, 255, .1)
 }
 
 .drought-legend h4 {
@@ -393,4 +402,60 @@ body {
 
 .leaflet-control-attribution {
   display: none !important;
+}
+
+/* Mobile-only collapsible sections inside legend */
+.legend-section {
+  margin: 0;
+  margin-top: 10px;
+}
+
+.legend-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 6px 8px;
+  font-size: 15.4px;
+  font-weight: 700;
+  color: #eee;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  padding-bottom: 6px;
+  user-select: none;
+  cursor: default;
+}
+
+.legend-section__caret {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #eee;
+  transform: rotate(0deg);
+  transition: transform .18s ease-in-out;
+  display: none;
+}
+
+.legend-section--collapsed .legend-section__caret {
+  transform: rotate(-90deg);
+}
+
+.legend-section__body[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .legend-section__header {
+    cursor: pointer;
+  }
+
+  .legend-section__caret {
+    display: inline-block;
+  }
+
+  /* drought legend gap becomes too large inside a collapsible body */
+  .legend-section__body.drought-legend {
+    margin-top: 12px;
+    padding-top: 0;
+    border-top: 0;
+  }
 }

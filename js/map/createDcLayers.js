@@ -65,7 +65,7 @@ export function createDcLayers({ map, data, colorMap, sizeMap }) {
   data.forEach(d => {
     if (!d.lat || !d.lon) return;
     const color = colorMap[d.type] || '#999';
-    const size = 6;
+    const size = sizeMap[d.type] || 6;
 
     const marker = L.circleMarker([d.lat, d.lon], {
       radius: size,
