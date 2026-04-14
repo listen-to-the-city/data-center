@@ -22,6 +22,7 @@ const CAT_LABELS = {
 };
 const CAT_ORDER = ["Government DC","Hyperscale","Colocation","Telecom DC","Enterprise","Planned"];
 const DROUGHT_COLORS = {"1": "#fce4e4", "2": "#f5b8b0", "3": "#e07060", "4": "#c0302a", "5": "#8b0000"};
+const MOBILE_BREAKPOINT = 900;
 
 // Normalize incoming dataset (new dataset uses category/cat_raw)
 const CATEGORY_TO_TYPE = Object.fromEntries(
@@ -88,6 +89,65 @@ const droughtLayer = L.geoJSON(window.APP_DATA.DISTRICTS, {
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd', maxZoom: 19, zIndex: 500
 }).addTo(map);
+
+const detailPanelEl = document.getElementById('detail-panel');
+const mapEl = document.getElementById('map');
+const mobileMenuToggleEl = document.getElementById('mobile-menu-toggle');
+const mobileOverlayEl = document.getElementById('mobile-overlay');
+
+function isMobileView() {
+  return window.innerWidth <= MOBILE_BREAKPOINT;
+}
+
+function setSidebarOpen(isOpen) {
+  document.body.classList.toggle('sidebar-open', isOpen);
+  mobileMenuToggleEl.setAttribute('aria-expanded', String(isOpen));
+  mobileMenuToggleEl.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
+  mobileMenuToggleEl.textContent = isOpen ? 'CLOSE' : 'MENU';
+}
+
+function openSidebar() {
+  setSidebarOpen(true);
+}
+
+function closeSidebar() {
+  setSidebarOpen(false);
+}
+
+function toggleSidebar() {
+  setSidebarOpen(!document.body.classList.contains('sidebar-open'));
+}
+
+function syncLayoutMode() {
+  if (!isMobileView()) {
+    closeSidebar();
+  }
+  map.invalidateSize();
+}
+
+mobileMenuToggleEl.addEventListener('click', toggleSidebar);
+mobileOverlayEl.addEventListener('click', () => {
+  if (document.body.classList.contains('detail-open')) {
+    closeDetail();
+    return;
+  }
+  if (document.body.classList.contains('sidebar-open')) {
+    closeSidebar();
+  }
+});
+
+window.addEventListener('resize', syncLayoutMode);
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.body.classList.contains('detail-open')) {
+      closeDetail();
+      return;
+    }
+    if (document.body.classList.contains('sidebar-open')) {
+      closeSidebar();
+    }
+  }
+});
 
 // ── TYPE FILTERS ──────────────────────────────────────────
 const ALL_TYPES = Object.keys(TYPE_COLORS);
@@ -172,9 +232,6 @@ window.APP_DATA.DC_DATA.forEach(dc => {
 
 // ── DETAIL PANEL ──────────────────────────────────────────
 function openDetail(dc, color) {
-  const panel = document.getElementById('detail-panel');
-  const mapEl = document.getElementById('map');
-  
   document.getElementById('detail-type-badge').textContent = dc.type;
   document.getElementById('detail-type-badge').style.cssText = `
     background:${color}22; color:${color};
@@ -205,14 +262,19 @@ function openDetail(dc, color) {
       <span class="detail-val" style="${k === 'IT 용량' ? 'color:#00e5ff;' : (k === 'PUE' ? 'color:#a2fc4d;' : '')}">${v}</span>
     </div>`).join('');
 
-  panel.classList.add('open');
+  detailPanelEl.classList.add('open');
+  document.body.classList.add('detail-open');
   mapEl.classList.add('detail-open');
+  if (isMobileView()) {
+    closeSidebar();
+  }
   map.invalidateSize();
 }
 
 function closeDetail() {
-  document.getElementById('detail-panel').classList.remove('open');
-  document.getElementById('map').classList.remove('detail-open');
+  detailPanelEl.classList.remove('open');
+  document.body.classList.remove('detail-open');
+  mapEl.classList.remove('detail-open');
   map.invalidateSize();
 }
 
@@ -311,3 +373,4 @@ function updateStatTotal() {
 // Initial stat render
 document.getElementById('stat-total').textContent = window.APP_DATA.DC_DATA.length;
 updateStatTotal();
+syncLayoutMode();
