@@ -592,7 +592,8 @@ body {
   .detail-row {
     /* flex-direction: column; */
     align-items: center;
-    gap: 4px;
+    gap: 30px;
+    word-break: keep-all;
   }
 
   .detail-key {
@@ -600,7 +601,7 @@ body {
   }
 
   .detail-val {
-    text-align: left;
+    text-align: right;
     word-break: keep-all;
     font-size: 12px;
   }
