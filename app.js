@@ -60,9 +60,11 @@ const map = L.map('map', {
 });
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-// Dark basemap
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-  subdomains: 'abcd', maxZoom: 19
+// Dark basemap (no API key). Labels sit above the drought overlay.
+const basemapMaxZoom = 16;
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19,
+  maxNativeZoom: basemapMaxZoom
 }).addTo(map);
 
 // Drought choropleth
@@ -85,9 +87,14 @@ const droughtLayer = L.geoJSON(window.APP_DATA.DISTRICTS, {
   }
 }).addTo(map);
 
-// Labels layer on top
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
-  subdomains: 'abcd', maxZoom: 19, zIndex: 500
+// Labels layer on top of the choropleth, below markers
+map.createPane('labels');
+map.getPane('labels').style.zIndex = 450;
+map.getPane('labels').style.pointerEvents = 'none';
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+  pane: 'labels',
+  maxZoom: 19,
+  maxNativeZoom: basemapMaxZoom
 }).addTo(map);
 
 const detailPanelEl = document.getElementById('detail-panel');
